@@ -51,6 +51,16 @@
         L.marker([26, 131.0]).bindPopup("平面直角座標17系原点").addTo(map);
         L.marker([20, 136.0]).bindPopup("平面直角座標18系原点").addTo(map);
         L.marker([26, 154.0]).bindPopup("平面直角座標19系原点").addTo(map);
+
+        // GeoJSONレイヤーを作成
+        fetch("./P29-21_10.geojson")
+          .then((res) => res.json())
+          .then((json) => {
+            // GeoJSONレイヤーを作成
+            L.geoJSON(json)
+              .bindPopup((layer) => layer.feature.properties.P29_004)
+              .addTo(map);
+          });
       </script>
     </div>
   </body>

@@ -64,6 +64,25 @@
         const layerControl = L.control
           .layers(baseLayers, [], { collapsed: false })
           .addTo(map);
+
+        fetch("./A16-15_00_DID.geojson")
+          .then((res) => res.json())
+          .then((json) => {
+            const polygon = L.geoJSON(json, {
+              style: (feature) => ({
+                color: "red",
+                stroke: false,
+                // 人口を面積で割った値でポリゴンの濃さを変える
+                fillOpacity:
+                  feature.properties["人口"] /
+                  feature.properties["面積"] /
+                  20000,
+              }),
+            })
+              .bindPopup((layer) => "人口: " + layer.feature.properties["人口"])
+              .addTo(map);
+            layerControl.addOverlay(polygon, "人口集中地区");
+          });
       </script>
     </div>
   </body>

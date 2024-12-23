@@ -64,43 +64,6 @@
         const layerControl = L.control
           .layers(baseLayers, [], { collapsed: false })
           .addTo(map);
-
-        // 円形
-        L.circle([35.3627808, 138.7307908], {
-          color: "yellow",
-          fillColor: "#ff0000",
-          fillOpacity: 0.3,
-          radius: 1000,
-        })
-          .bindPopup("I am Circle.")
-          .addTo(map);
-
-        // 線分
-        L.polyline(
-          [
-            [35.36, 138.73],
-            [35.37, 138.73],
-            [35.37, 138.74],
-            [35.38, 138.74],
-            [35.39, 138.75],
-            [35.37, 138.75],
-          ],
-          { color: "blue" }
-        )
-          .bindPopup("I am Plyline!")
-          .addTo(map);
-
-        // 多角形
-        L.polygon(
-          [
-            [35.36, 138.7307908],
-            [35.35, 138.74],
-            [35.34, 138.72],
-          ],
-          { color: "green" }
-        )
-          .bindPopup("I am Polygon!")
-          .addTo(map);
       </script>
     </div>
   </body>

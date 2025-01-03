@@ -32,6 +32,22 @@
           zoom: 14,
         });
 
+        const colorDict = {
+          1: "green",
+          2: "blue",
+          3: "red",
+          4: "orenga",
+          5: "purple",
+        };
+
+        const weightDict = {
+          1: 10,
+          2: 7,
+          3: 4,
+          4: 4,
+          5: 4,
+        };
+
         // 背景地図データ
         const baseLayers = {
           OpenStreetMap: L.tileLayer(
@@ -82,6 +98,25 @@
               .bindPopup((layer) => "人口: " + layer.feature.properties["人口"])
               .addTo(map);
             layerControl.addOverlay(polygon, "人口集中地区");
+          });
+        fetch("./N02-21_RailroadSection.geojson")
+          .then((res) => res.json())
+          .then((json) => {
+            // GEOJSONレイヤーを作成
+            const line = L.geoJSON(json, {
+              style: (feature) => ({
+                weight: weightDict[feature.properties.N02_002],
+                color: colorDict[feature.properties.N02_002],
+              }),
+            })
+              .bindPopup(
+                (layer) =>
+                  layer.properties.N02_004 +
+                  "<br />" +
+                  layer.feature.properties.N02_003
+              )
+              .addTo(map);
+            layerControl.addOverlay(line, "鉄道データ");
           });
       </script>
     </div>

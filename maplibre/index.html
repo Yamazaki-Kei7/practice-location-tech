@@ -128,6 +128,18 @@
           ],
         },
       });
+
+      map.on("click", (e) => {
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: ["admin-layer"],
+        });
+        if (features.length === 0) return;
+
+        const feature = features[0];
+        alert(
+          `${feature.properties.N03_007}: ${feature.properties.N03_001}${feature.properties.N03_004}`
+        );
+      });
     </script>
   </body>
 </html>

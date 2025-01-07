@@ -13,6 +13,9 @@
   <body>
     <div id="map" style="height: 80vh"></div>
     <script>
+      const path = location.href.replace("/index.html", "");
+      const vectortileUrl = `${path}/tiles/{z}/{x}/{y}.pbf`;
+
       const map = new maplibregl.Map({
         container: "map",
         center: [137.1, 36.5],
@@ -29,6 +32,11 @@
               maxzoom: 19,
               attribution:
                 '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            },
+            admin: {
+              type: "vector",
+              tiles: [vectortileUrl],
+              maxzom: 8,
             },
             polygon: {
               type: "geojson",
@@ -48,6 +56,17 @@
               id: "osm-layer",
               source: "osm",
               type: "raster",
+            },
+            {
+              id: "admin-layer",
+              source: "admin",
+              "source-layer": "admin",
+              type: "fill",
+              paint: {
+                "fill-color": "#fa0",
+                "fill-opacity": 0.5,
+                "fill-outline-color": "#00f",
+              },
             },
             {
               id: "polygon-layer",

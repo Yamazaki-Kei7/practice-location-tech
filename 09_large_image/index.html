@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>サンプルタイトル</title>
+    <script src="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="map" style="height: 80vh"></div>
+    <script>
+      rastertileUrl = `${location.href.replace(
+        "/index.html",
+        ""
+      )}/tiles/{z}/{x}/{y}.png`;
+
+      const map = new maplibregl.Map({
+        container: "map",
+        center: [137.1, 36.5],
+        zoom: 4,
+        style: {
+          // Maplibre-Style
+          version: 8,
+          sources: {
+            // 地図上で使うデータを定義する
+            naturalearth: {
+              type: "raster",
+              tiles: [rastertileUrl],
+              tileSize: 256,
+              maxzoom: 5,
+              atrribution:
+                '© <a href="https://www.naturalearthdata.com/">Natural Earth</a>',
+            },
+          },
+          layers: [
+            {
+              id: "naturalearth-layer",
+              source: "naturalearth",
+              type: "raster",
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>

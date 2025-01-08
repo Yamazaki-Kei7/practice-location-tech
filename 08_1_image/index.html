@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>サンプルタイトル</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <div id="map" style="height: 80vh">
+      <script>
+        const map = L.map("map", {
+          center: [35.3527808, 138.7307908],
+          zoom: 14,
+        });
+
+        // 背景地図データ
+        const baseLayers = {
+          OpenStreetMap: L.tileLayer(
+            "https://tile.openstreetmap.jp/{z}/{x}/{y}.png",
+            {
+              maxZoom: 19,
+              attribution:
+                'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            }
+          ),
+          地理院地図: L.tileLayer(
+            "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+            {
+              maxZoom: 18,
+              attribution:
+                '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>',
+            }
+          ),
+          空中写真: L.tileLayer(
+            "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+            {
+              maxZoom: 17,
+              attribution:
+                '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>',
+            }
+          ),
+        };
+        map.addLayer(baseLayers["OpenStreetMap"]);
+
+        const imageLayer = L.imageOverlay(
+          "./mtfuji.jpg",
+          [
+            [35.2906143398424206, 138.6212919295209929],
+            [35.4299751815481514, 138.8426007912885041],
+          ],
+          { opacitry: 0.7 }
+        );
+        map.addLayer(imageLayer);
+
+        rasterLayers = {
+          富士山: imageLayer,
+        };
+
+        // レイヤ切り替えコントルール
+        const layerControl = L.control
+          .layers(baseLayers, rasterLayers, { collapsed: false })
+          .addTo(map);
+      </script>
+    </div>
+  </body>
+</html>

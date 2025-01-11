@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>サンプルタイトル</title>
+    <script src="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@^5.0.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="map" style="height: 80vh"></div>
+    <script>
+      const map = new maplibregl.Map({
+        container: "map",
+        center: [137.1, 36.5],
+        zoom: 4,
+        style: {
+          // Maplibre-Style
+          version: 8,
+          sources: {
+            // 地図上で使うデータを定義する
+            osm: {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+              maxzoom: 18,
+              attribution:
+                '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            },
+            admin: {
+              type: "vector",
+              tiles: [
+                `${location.href.replace(
+                  "/index.html",
+                  ""
+                )}/admin/{z}/{x}/{y}.pbf`,
+              ],
+              maxzoom: 8,
+              attribution:
+                '<a href="https://nlftp/mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html">国土数値情報 - 行政区域データ</a>',
+            },
+            school: {
+              type: "geojson",
+              data: "./P29-21.geojson",
+              attribution:
+                '<a href="https://nlftp/mlit.go.jp/ksj/gml/datalist/KsjTmplt-P29-v2_0.html">国土数値情報 - 学校データ</a>',
+            },
+          },
+          layers: [
+            {
+              id: "background",
+              type: "background",
+              paint: {
+                "background-color": "#555",
+              },
+            },
+            {
+              id: "osm-layer",
+              source: "osm",
+              type: "raster",
+              minzoom: 10,
+              paint: {
+                "raster-opacity": [
+                  // ズームの応じた透過度調整
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  8,
+                  0,
+                  14,
+                  0.7,
+                ],
+              },
+            },
+            {
+              id: "admin-layer",
+              source: "admin",
+              "source-layer": "admin",
+              type: "fill",
+              paint: {
+                "fill-color": "#6a3",
+                "fill-opacity": [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  8,
+                  0.7,
+                  14,
+                  0.3,
+                ],
+              },
+            },
+            {
+              id: "admin-outline-layer",
+              source: "admin",
+              "source-layer": "admin",
+              type: "line",
+              paint: {
+                "line-color": "#373",
+                "line-width": 4,
+              },
+            },
+            {
+              id: "school-heatmap-layer",
+              source: "school",
+              type: "heatmap",
+              maxzoom: 12,
+              paint: {
+                "heatmap-weight": 0.01,
+                "heatmap-opacity": 0.7,
+                "heatmap-color": [
+                  "interpolate",
+                  ["linear"],
+                  ["heatmap-density"],
+                  0,
+                  "rgba(0,0,0,0)",
+                  0.5,
+                  "rgba(255,200,0,1)",
+                  1.0,
+                  "rgba(255,240,200,1)",
+                ],
+              },
+            },
+            {
+              id: "school-circle-layer",
+              source: "school",
+              type: "circle",
+              minzoom: 8,
+              paint: {
+                "circle-color": [
+                  // アイコンの色を属性値によって塗り分ける
+                  "interpolate",
+                  ["linear"],
+                  ["get", "P29_003"],
+                  16001,
+                  "#f00",
+                  16002,
+                  "#0f0",
+                  16003,
+                  "#0f0",
+                  16004,
+                  "#00f",
+                  16005,
+                  "orange",
+                ],
+                "circle-opacity": [
+                  // ズームの応じた透過度調整
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  8,
+                  0,
+                  9,
+                  0.1,
+                  14,
+                  1,
+                ],
+              },
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>

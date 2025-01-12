@@ -277,9 +277,13 @@ map.on("load", () => {
       "skhb-8-layer": "火山現象",
     },
   });
+  const geolocationControl = new maplibregl.GeolocateControl({
+    trackUserLocation: true,
+  });
 
   map.addControl(opacity, "top-left");
   map.addControl(opacitySkhb, "top-right");
+  map.addControl(geolocationControl, "bottom-right");
 
   map.on("click", (e) => {
     const features = map.queryRenderedFeatures(e.point, {

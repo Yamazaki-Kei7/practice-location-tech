@@ -3,6 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import OpacityControl from "maplibre-gl-opacity";
 import "maplibre-gl-opacity/dist/maplibre-gl-opacity.css";
 import distance from "@turf/distance";
+import { useGsiTerrainSource } from "maplibre-gl-gsi-terrain";
 
 const map = new maplibregl.Map({
   container: "map",
@@ -296,8 +297,22 @@ map.on("load", () => {
     },
   });
 
-  let userLocation = null;
+  const gsiTerrainSource = useGsiTerrainSource(maplibregl.addProtocol);
+  map.addSource("terrain", gsiTerrainSource);
+  map.addLayer(
+    {
+      id: "hillshade",
+      source: "terrain",
+      type: "hillshade",
+      paint: {
+        "hillshade-illumination-anchor": "map",
+        "hillshade-exaggeration": 0.2,
+      },
+    },
+    "hazard_jisuberi-layer"
+  );
 
+  let userLocation = null;
   const geolocationControl = new maplibregl.GeolocateControl({
     trackUserLocation: true,
   });
@@ -308,6 +323,12 @@ map.on("load", () => {
   geolocationControl.on("geolocate", (e) => {
     userLocation = [e.coords.longitude, e.coords.latitude];
   });
+  map.addControl(
+    new maplibregl.TerrainControl({
+      source: "terrain",
+      exaggeration: 2,
+    })
+  );
 
   map.on("click", (e) => {
     const features = map.queryRenderedFeatures(e.point, {

@@ -147,7 +147,7 @@ const map = new maplibregl.Map({
         layout: { visibility: "none" },
       },
       {
-        id: "skhb-layer",
+        id: "skhb-1-layer",
         source: "skhb",
         "source-layer": "skhb",
         type: "circle",
@@ -157,6 +157,98 @@ const map = new maplibregl.Map({
           "circle-stroke-width": 1,
           "circle-color": "#ffffff",
         },
+        filter: ["get", "disaster1"],
+      },
+      {
+        id: "skhb-2-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster2"],
+      },
+      {
+        id: "skhb-3-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster3"],
+      },
+      {
+        id: "skhb-4-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster4"],
+      },
+      {
+        id: "skhb-5-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster5"],
+      },
+      {
+        id: "skhb-6-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster6"],
+      },
+      {
+        id: "skhb-7-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster7"],
+      },
+      {
+        id: "skhb-8-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
+        filter: ["get", "disaster8"],
       },
     ],
   },
@@ -173,5 +265,74 @@ map.on("load", () => {
       "hazard_jisuberi-layer": "地すべり警戒区域",
     },
   });
+  const opacitySkhb = new OpacityControl({
+    baseLayers: {
+      "skhb-1-layer": "洪水",
+      "skhb-2-layer": "崖崩れ/土石流/地すべり",
+      "skhb-3-layer": "高潮",
+      "skhb-4-layer": "地震",
+      "skhb-5-layer": "津波",
+      "skhb-6-layer": "大規模な火事",
+      "skhb-7-layer": "内水氾濫",
+      "skhb-8-layer": "火山現象",
+    },
+  });
+
   map.addControl(opacity, "top-left");
+  map.addControl(opacitySkhb, "top-right");
+
+  map.on("click", (e) => {
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: [
+        "skhb-1-layer",
+        "skhb-2-layer",
+        "skhb-3-layer",
+        "skhb-4-layer",
+        "skhb-5-layer",
+        "skhb-6-layer",
+        "skhb-7-layer",
+        "skhb-8-layer",
+      ],
+    });
+    if (features.length === 0) return;
+    const feature = features[0];
+    const popup = new maplibregl.Popup()
+      .setLngLat(feature.geometry.coordinates)
+      .setHTML(
+        `\
+        <div style="font-weight:900; font-size: 1.2rem;">${
+          feature.properties.name
+        }</div>\
+        <div>${feature.properties.address}</div>\
+        <div>${feature.properties.remarks ?? ""}</div>\
+        <div>\
+        <span${
+          feature.properties.disaster1 ? "" : ' style="color:#ccc;"'
+        }">洪水</span>\
+        <span${
+          feature.properties.disaster2 ? "" : ' style="color:#ccc;"'
+        }> 崖崩れ/土石流/地滑り</span>\
+        <span${
+          feature.properties.disaster3 ? "" : ' style="color:#ccc;"'
+        }> 高潮</span>\
+        <span${
+          feature.properties.disaster4 ? "" : ' style="color:#ccc;"'
+        }> 地震</span>\
+        <div>\
+        <span${
+          feature.properties.disaster5 ? "" : ' style="color:#ccc;"'
+        }>津波</span>\
+        <span${
+          feature.properties.disaster6 ? "" : ' style="color:#ccc;"'
+        }> 大規模な火事</span>\
+        <span${
+          feature.properties.disaster7 ? "" : ' style="color:#ccc;"'
+        }> 内水氾濫</span>\
+        <span${
+          feature.properties.disaster8 ? "" : ' style="color:#ccc;"'
+        }> 火山現象</span>\
+        </div>`
+      )
+      .addTo(map);
+  });
 });

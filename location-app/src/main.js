@@ -87,6 +87,16 @@ const map = new maplibregl.Map({
         attribution:
           '<a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html">ハザードマップポータルサイト</a>',
       },
+      skhb: {
+        type: "vector",
+        tiles: [
+          `${location.href.replace("/index.html", "")}/skhb/{z}/{x}/{y}.pbf`,
+        ],
+        minzoom: 5,
+        maxzoom: 8,
+        attribution:
+          '<a href="https://www.gsi.go.jp/bousaichiri/hinanbasho.html" target="_blank">国土地理院:指定緊急避難場所データ</a>',
+      },
     },
     layers: [
       {
@@ -135,6 +145,18 @@ const map = new maplibregl.Map({
         type: "raster",
         paint: { "raster-opacity": 0.7 },
         layout: { visibility: "none" },
+      },
+      {
+        id: "skhb-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-color": "#ffffff",
+        },
       },
     ],
   },
